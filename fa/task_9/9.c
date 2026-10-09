@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
-#include "utils.h"
+#include "../utils.h"
 
 #define arr_size 100
 

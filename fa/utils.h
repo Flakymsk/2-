@@ -8,6 +8,7 @@ typedef enum {
     ERR_INVALID_NUMBER,
     ERR_RANGE_MISMATCH,
     ERR_MEMORY_ALLOC,
+    ERR_INVALID_PATHS,
     ERR_OPEN_FILE,
 } status_code;
 

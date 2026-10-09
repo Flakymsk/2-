@@ -1,11 +1,12 @@
 #ifndef FUNC_1
 #define FUNC_1
-#include "utils.h"
+#include "../utils.h"
 
 status_code parse_args(int argc, char *argv[], long *num, char *c);
 void print_bool(const bool x);
 void print_x(const long x);
 void print_str(const char *str);
+void print_chars(const char *str);
 void print_arr(const long *arr, const int amount);
 long* get_natural_numbers_multiples_x(const long x, int *amount);
 bool is_prime_number(const long x);

@@ -19,6 +19,9 @@ void print_error_message(status_code code) {
         case ERR_MEMORY_ALLOC:
             printf("Error: Failed to allocate dynamic memory.\n");
             break;
+        case ERR_INVALID_PATHS:
+            printf("Error: Invalid paths input.\n");
+            break;
         case ERR_OPEN_FILE:
             printf("Error: Failed to open file\n");
             break;

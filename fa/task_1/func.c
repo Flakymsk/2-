@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
-#include "utils.h"
+#include "../utils.h"
 
 status_code parse_args(int argc, char *argv[], long *num, char *c){
     if (argc != 3)
@@ -39,6 +39,18 @@ void print_str(const char *str){
     printf("%s\n", str);
 }
 
+void print_chars(const char *str){
+    int len = strlen(str);
+    if (len == 0)
+        return;
+
+    printf("%c ", str[0]);
+    for (int i = 1; i < len; ++i){
+        printf(" %c", str[i]);
+    }
+    printf("\n");
+}
+
 void print_arr(const long *arr, const int amount){
     if (!amount){
         printf("empty arr\n");
@@ -46,7 +58,7 @@ void print_arr(const long *arr, const int amount){
     }
 
     printf("%ld", arr[0]);
-    for (int i = 2; i < amount; ++i)
+    for (int i = 1; i < amount; ++i)
         printf(" %ld", arr[i]);
     printf("\n");
 }
@@ -55,7 +67,7 @@ long* get_natural_numbers_multiples_x(const long x, int *amount){
     static long result[100];
 
     int idx = 0;
-    for (long i = 2 * x; i <= 100; i += x)
+    for (long i = x; i <= 100; i += x)
         result[idx++] = i;
 
     *amount = idx;

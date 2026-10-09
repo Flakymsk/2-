@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include <limits.h>
-#include "utils.h"
+#include "../utils.h"
 
 status_code parse_base(const int argc, const char *argv[], long *base){
     if (argc < 3)
         return ERR_WRONG_ARG_COUNT;
 
     char *endptr;
-    *base = strtol(argv[1], endptr, 10);
+    *base = strtol(argv[1], &endptr, 10);
 
     if (*base < 2 || *base > 36)
         return ERR_INVALID_NUMBER;

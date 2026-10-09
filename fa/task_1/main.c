@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "func.h"
+#include "../utils.h"
 
 int main(int argc, char *argv[]){
     long x;
@@ -24,12 +25,14 @@ int main(int argc, char *argv[]){
     }
     case 's':{
         char *str = count_num_hex(x);
-        print_str(str);
+        print_chars(str);
         break;
     }
     case 'e':
-        if (x > 10)
+        if (x > 10){
             print_error_message(ERR_INVALID_NUMBER);
+            return 1;
+        }
 
         print_table_pows(x);
         break;
