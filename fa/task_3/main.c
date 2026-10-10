@@ -37,9 +37,9 @@ int main(int argc, char *argv[]){
         long b = arr[1];
 
         if (a % b == 0)
-            printf("yes\n");
+            printf("true\n");
         else
-            printf("no\n");
+            printf("false\n");
 
         break;
     }

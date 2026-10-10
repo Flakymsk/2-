@@ -1,11 +1,11 @@
-#!/bin/bash
 gcc ../utils.c func.c main.c -o program -lm
-echo -e "Hello 123 World!\nC programming 2026.\n#$\nNoNewlineEnd 99" > input.txt
 
-echo "=== ЗАПУСК ТЕСТОВ ==="
+echo -e "Привет 123 Мир!\nC programming 2026.\n#$\nNoNewlineEnd 99" > input.txt
+
+echo "=== ЗАПУСК ТЕСТОВ ДЛЯ ЗАДАЧИ 4 ==="
 
 ./program -d input.txt
-echo "Результат -d:"
+echo "Результат -d (с кириллицей):"
 cat out_input.txt
 echo "----------------"
 
@@ -24,8 +24,12 @@ echo "Результат -a:"
 cat out_input.txt
 echo "----------------"
 
-./program -nd input.txt custom.txt
-echo "Результат -nd:"
-cat custom.txt
+./program -nd input.txt ./input.txt > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "Тест защиты путей: ОК (перезапись заблокирована)"
+else
+    echo "Тест защиты путей: ФЕЙЛ (уязвимость к перезаписи файла!)"
+fi
+echo "----------------"
 
-rm -f input.txt out_input.txt custom.txt
+rm -f input.txt out_input.txt program

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -26,7 +27,8 @@ status_code parse_args(int argc, char *argv[], const char flag, double *arr_d, l
         for (int i = 0; i < 4; ++i){
             arr_d[i] = strtod(argv[i + 2], &endptr);
 
-            if (arr_d[i] == HUGE_VAL || *endptr != '\0' || endptr == argv[i + 2])
+            if (arr_d[i] == HUGE_VAL || *endptr != '\0' || 
+                endptr == argv[i + 2] || isnan(arr_d[i]))
                 return ERR_INVALID_NUMBER;
             
             if (i == 0 && arr_d[i] <= 0.0)
@@ -95,36 +97,40 @@ bool is_unique_permutation(double history[][3], int count, double a, double b, d
     return true;
 }
 
-void solve_all_permutations(double eps, double coef1, double coef2, double coef3) {
-    double base_coeffs[3] = {coef1, coef2, coef3};
+void solve_all_permutations(double eps, double coeff1, double coeff2, double coeff3){
+    double base_coeffs[3] = {coeff1, coeff2, coeff3};
     double history[6][3];
     int unique_count = 0;
 
-    int p[6][3] = {
-        {0, 1, 2}, {0, 2, 1}, {1, 0, 2},
-        {1, 2, 0}, {2, 0, 1}, {2, 1, 0}
-    };
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            for (int k = 0; k < 3; ++k) {
+                if (i != j && i != k && j != k) {
+                    double a = base_coeffs[i];
+                    double b = base_coeffs[j];
+                    double c = base_coeffs[k];
 
-    for (int i = 0; i < 6; ++i) {
-        double a = base_coeffs[p[i][0]];
-        double b = base_coeffs[p[i][1]];
-        double c = base_coeffs[p[i][2]];
-
-        if (is_unique_permutation(history, unique_count, a, b, c, eps)) {
-            history[unique_count][0] = a;
-            history[unique_count][1] = b;
-            history[unique_count][2] = c;
-            unique_count++;
-            solve_quad_equation(a, b, c, eps);
+                    if (is_unique_permutation(history, unique_count, a, b, c, eps)) {
+                        history[unique_count][0] = a;
+                        history[unique_count][1] = b;
+                        history[unique_count][2] = c;
+                        unique_count++;
+                        
+                        solve_quad_equation(a, b, c, eps);
+                    }
+                }
+                
+            }
         }
     }
 }
+
 
 bool check_triangle_sides(const double eps, double a, double b, double c){
     if (a > b) swap(&a, &b);
     if (b > c) swap(&b, &c);
 
-    if (fabs(c * c - a * a - b * b) < eps)
+    if (c > HUGE_VAL / c)
         return true;
     else
         return false;

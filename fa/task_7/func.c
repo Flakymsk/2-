@@ -3,27 +3,50 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include <sys/stat.h>
 #include "../utils.h"
 
-status_code parse_args(int argc, char *argv[], char *flag){
+status_code parse_args(int argc, char *argv[], char *choice) {
     if (argc < 4)
         return ERR_WRONG_ARG_COUNT;
 
-    if ((argv[1][0] != '-' && argv[1][0] != '/') || strlen(argv[1]) != 2)
+    if (argv[1][0] != '-' && argv[1][0] != '/')
         return ERR_WRONG_FLAG;
 
-    *flag = argv[1][1];
+    if (strlen(argv[1]) != 2)
+        return ERR_WRONG_FLAG;
 
-    if (*flag == 'r') {
+    *choice = argv[1][1];
+
+    if (*choice == 'r') {
         if (argc != 5)
             return ERR_WRONG_ARG_COUNT;
-        if (strcmp(argv[2], argv[4]) == 0 || strcmp(argv[3], argv[4]) == 0)
-            return ERR_INVALID_PATHS;
-    } else if (*flag == 'a') {
+
+        struct stat st2, st3, st4;
+        bool has_st2 = (stat(argv[2], &st2) == 0);
+        bool has_st3 = (stat(argv[3], &st3) == 0);
+        bool has_st4 = (stat(argv[4], &st4) == 0);
+
+        if (has_st2 && has_st4) {
+            if (st2.st_ino == st4.st_ino && st2.st_dev == st4.st_dev)
+                return ERR_INVALID_PATHS;
+        }
+        if (has_st3 && has_st4) {
+            if (st3.st_ino == st4.st_ino && st3.st_dev == st4.st_dev)
+                return ERR_INVALID_PATHS;
+        }
+    } else if (*choice == 'a') {
         if (argc != 4)
             return ERR_WRONG_ARG_COUNT;
-        if (strcmp(argv[2], argv[3]) == 0)
-            return ERR_INVALID_PATHS;
+
+        struct stat st2, st3;
+        bool has_st2 = (stat(argv[2], &st2) == 0);
+        bool has_st3 = (stat(argv[3], &st3) == 0);
+
+        if (has_st2 && has_st3) {
+            if (st2.st_ino == st3.st_ino && st2.st_dev == st3.st_dev)
+                return ERR_INVALID_PATHS;
+        }
     } else {
         return ERR_WRONG_FLAG;
     }
@@ -31,7 +54,7 @@ status_code parse_args(int argc, char *argv[], char *flag){
     return SUCCESS;
 }
 
-status_code check_opening_files(int amount, ...){
+status_code check_opening_files(int amount, ...) {
     va_list args;
     va_start(args, amount);
 
@@ -47,7 +70,7 @@ status_code check_opening_files(int amount, ...){
     return SUCCESS;
 }
 
-void fputc_base_n(FILE *writefile, int c, int n){
+void fputc_base_n(FILE *writefile, int c, int n) {
     if (c >= n) {
         fputc_base_n(writefile, c / n, n);
     }
@@ -58,13 +81,13 @@ void fputc_base_n(FILE *writefile, int c, int n){
         fprintf(writefile, "%c", 'A' + digit - 10);
 }
 
-void swap_files(FILE **a, FILE **b){
+void swap_files(FILE **a, FILE **b) {
     FILE *temp = *a;
     *a = *b;
     *b = temp;
 }
 
-void write_mixed_lexemes(FILE *file1, FILE *file2, FILE *file3){
+void write_mixed_lexemes(FILE *file1, FILE *file2, FILE *file3) {
     int c;
     FILE *readfile = file1;
     FILE *waitfile = file2;
@@ -110,7 +133,7 @@ void write_mixed_lexemes(FILE *file1, FILE *file2, FILE *file3){
     }
 }
 
-void write_modified_lexemes(FILE *readfile, FILE *writefile){
+void write_modified_lexemes(FILE *readfile, FILE *writefile) {
     int count = 1, c;
     bool in_word = false;
     bool has_content = false;

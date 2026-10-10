@@ -14,6 +14,11 @@ int main(int argc, char *argv[]){
     switch (choice){
     case 'h':{
         int amount = 0;
+        if (x <= 0){
+            print_error_message(ERR_INVALID_NUMBER);
+            return 1;
+        }
+
         long* result = get_natural_numbers_multiples_x(x, &amount);
         print_arr(result, amount);
         break;
@@ -37,11 +42,19 @@ int main(int argc, char *argv[]){
         print_table_pows(x);
         break;
     case 'a':{
+        if (x < 1){
+            print_error_message(ERR_INVALID_NUMBER);
+            return 1;
+        }
         long sum = sum_from_1_to_x(x);
         print_x(sum);
         break;
     }
     case 'f':{
+        if (x < 0 || x > 20){
+            print_error_message(ERR_INVALID_NUMBER);
+            return 1;
+        }
         long fact = fact_x(x);
         print_x(fact);
         break;

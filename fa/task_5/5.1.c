@@ -26,7 +26,7 @@ status_code parse_args(int argc, char *argv[], double *x, double *eps){
     return SUCCESS;
 }
 
-double sum_a(const double x, const double eps){
+double sum_a(const double x, const double eps, status_code *msg){
     double sum = 1.0;
     double t = 1.0;
     int n = 1;
@@ -45,7 +45,7 @@ double sum_a(const double x, const double eps){
     return sum;
 }
 
-double sum_b(const double x, const double eps){
+double sum_b(const double x, const double eps, status_code *msg){
     double sum = 1.0;
     double t = 1.0;
     int n = 1;
@@ -64,7 +64,7 @@ double sum_b(const double x, const double eps){
     return sum;
 }
 
-double sum_c(const double x, const double eps){
+double sum_c(const double x, const double eps, status_code *msg){
     double sum = 1.0;
     double t = 1.0;
     int n = 1;
@@ -76,14 +76,25 @@ double sum_c(const double x, const double eps){
         ++n;
 
         ++iter;
-        if (iter > MAX_ITERATIONS)
-            return HUGE_VAL;
+        if (iter > MAX_ITERATIONS){
+            msg = ERR_INVALID_NUMBER;
+            print_error_message(msg);
+            return HUGE_VAL
+        }
+            
+        
+        if (isnan(sum)){
+            msg = ERR_INVALID_NUMBER;
+            print_error_message(msg);
+            return NAN;
+        }
+
     }
 
     return sum;
 }
 
-double sum_d(const double x, const double eps){
+double sum_d(const double x, const double eps, status_code *msg){
     double sum = -0.5 * x * x;
     double t = sum;
     int n = 2;
@@ -110,7 +121,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
     
-    double (*sums[])(const double, const double) = {sum_a, sum_b, sum_c, sum_d};
+    double (*sums[])(const double, const double, status_code*) = {sum_a, sum_b, sum_c, sum_d};
 
     for (int i = 0; i < 4; ++i){
         sum = sums[i](x, eps);

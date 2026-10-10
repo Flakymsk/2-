@@ -1,8 +1,8 @@
 gcc ../utils.c func.c main.c -o program -lm
 
-echo -e "0001A\n101\n00000\nFF" > input.txt
+echo -e "-0001A\n-101\n00000\nFF" > input.txt
 
-echo "=== ЗАПУСК ТЕСТОВ ==="
+echo "=== ЗАПУСК ТЕСТОВ ДЛЯ ЗАДАЧИ 8 ==="
 
 ./program input.txt output.txt
 echo "Результат обработки:"

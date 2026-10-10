@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdlib.h>
 #include "../utils.h"
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
@@ -26,15 +27,26 @@ status_code check_opening_files(int amount, ...){
 }
 
 void process_lexeme(FILE *writefile, const char *lex, int idx){
+    bool is_negative = false;
+    int start_digits = 0;
+
+    if (idx > 0 && lex[0] == '-'){
+        is_negative = true;
+        start_digits = 1;
+    }
+
+    if (start_digits == idx)
+        return;
+
     int base = 2;
-    for (int i = 0; i < idx; ++i){
+    for (int i = start_digits; i < idx; ++i){
         if (isdigit(lex[i]))
             base = max(base, lex[i] - '0' + 1);
         else if (isalpha(lex[i]))
             base = max(base, toupper(lex[i]) - 'A' + 11);
     }
 
-    int start = 0;
+    int start = start_digits;
     while (start < idx && lex[start] == '0')
         ++start;
 
@@ -46,7 +58,12 @@ void process_lexeme(FILE *writefile, const char *lex, int idx){
             int v = isdigit(lex[i]) ? (lex[i] - '0') : (toupper(lex[i]) - 'A' + 10);
             val10 = val10 * base + v;
         }
-        fprintf(writefile, "%s %d %lld\n", &lex[start], base, val10);
+        
+        if (is_negative){
+            fprintf(writefile, "-%s %d -%lld\n", &lex[start], base, val10);
+        } else {
+            fprintf(writefile, "%s %d %lld\n", &lex[start], base, val10);
+        }
     }
 }
 

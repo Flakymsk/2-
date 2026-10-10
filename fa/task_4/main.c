@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <string.h>
-#include "func.h"
+#include <locale.h>
 #include "../utils.h"
+#include "func.h"
 
 int main(int argc, char *argv[]) {
+    setlocale(LC_ALL, ""); 
+
     char flag;
     char *input_path = NULL;
     char output_name[256] = {0};
     status_code msg;
 
-    if ((msg = parse_file_arguments(argc, argv, &flag, &input_path, output_name)) != SUCCESS) {
+    if ((msg = parse_args(argc, argv, &flag, &input_path, output_name)) != SUCCESS) {
         print_error_message(msg);
         return 1;
     }
