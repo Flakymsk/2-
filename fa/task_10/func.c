@@ -1,9 +1,11 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <math.h>
 #include "../utils.h"
 
 status_code parse_base(const int argc, const char *argv[], long *base){
-    if (argc < 3)
+    if (argc != 2)
         return ERR_WRONG_ARG_COUNT;
 
     char *endptr;
@@ -18,28 +20,33 @@ status_code parse_base(const int argc, const char *argv[], long *base){
     return SUCCESS;
 }
 
-status_code parse_number(const char *arg, long *number, const long base){
 
+status_code parse_number(const char *arg, long *number, const long base){
     char *endptr;
-    *number = strtol(*arg, endptr, base);
+    *number = strtol(arg, &endptr, (int)base);
 
     if (*number == LONG_MAX || *number == LONG_MIN)
         return ERR_INVALID_NUMBER;
 
-    if (*endptr != '\0' || endptr == *arg)
+    if (*endptr != '\0' || endptr == arg)
         return ERR_INVALID_NUMBER;
     
     return SUCCESS;
 }
 
 void print_number_base_n(long number, int n){
+    if (number == 0) {
+        printf("0");
+        return;
+    }
+
     if (number < 0) {
         printf("-");
         number = -number;
     }
 
     if (number >= n) {
-        print_num_base_n(number / n, n);
+        print_number_base_n(number / n, n);
     }
 
     int digit = number % n;
@@ -50,9 +57,8 @@ void print_number_base_n(long number, int n){
     }
 }
 
-
 void proceed_number(const long number, long *max_val, long *sum){
-    if (abs(number) > abs(*max_val))
+    if (labs(number) > labs(*max_val))
         *max_val = number;
     
     *sum += number;

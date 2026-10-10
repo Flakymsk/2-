@@ -1,12 +1,12 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <limits.h>
+#include <math.h>
 #include "../utils.h"
 
 #define arr_size 100
 
-status_code parse_args(const int argc, const char *argv[], long *a, long *b){
+status_code parse_args(int argc, char *argv[], long *a, long *b){
     if (argc != 3)
         return ERR_WRONG_ARG_COUNT;
 
@@ -43,14 +43,13 @@ void swap_min_max(long* arr){
     arr[max_idx] = temp;
 }
 
-void print_arr(const long* arr){
+void print_arr(const long* arr, const int size){
     if (arr != NULL)
         printf("%ld", arr[0]);
 
-    for (int i = 1; i < arr_size; ++i){
+    for (int i = 1; i < size; ++i){
         printf(" %ld", arr[i]);
     }
-
     printf("\n");
 }
 
@@ -64,9 +63,17 @@ long find_closest_elem(const long a, const long *arr_B, const int size_B){
     if (a >= arr_B[size_B - 1]) return arr_B[size_B - 1];
 
     int l = 0, r = size_B - 1;
+    long closest = arr_B[0];
+    long min_diff = labs(closest - a);
 
     while (l <= r){
         int mid = (r - l) / 2 + l;
+        long diff = labs(arr_B[mid] - a);
+
+        if (diff < min_diff){
+            min_diff = diff;
+            closest = arr_B[mid];
+        }
 
         if (arr_B[mid] > a)
             r = mid - 1;
@@ -76,11 +83,7 @@ long find_closest_elem(const long a, const long *arr_B, const int size_B){
             return arr_B[mid];
     }
 
-    if (abs(arr_B[l] - a) < abs(arr_B[r] - a)) {
-        return arr_B[l];
-    } else {
-        return arr_B[r];
-    }
+    return closest;
 }
 
 void fill_arr_C(long *arr_C, const long *arr_A, const long *arr_B, const int size_AC, const int size_B){
@@ -90,39 +93,10 @@ void fill_arr_C(long *arr_C, const long *arr_A, const long *arr_B, const int siz
     }
 }
 
-long compare_longs(const void *a, const void *b){
-    return (*(const long *)a - *(const long *)b);
-}
-
-int main(int argc, char *argv[]){
-    long a, b;
-
-    parse_args(argc, argv, &a, &b);
-
-    long arr[arr_size];
-    
-    srand(time(NULL));
-
-    fill_arr(arr, arr_size, a, b);
-
-    print_arr(arr);
-    swap_min_max(arr);
-    print_arr(arr);
-
-    int size_AC = 10 + rand() % (10000 - 10 + 1);
-    int size_B = 10 + rand() % (10000 - 10 + 1);
-
-    long *arr_A = (long*)malloc(sizeof(long) * size_AC);
-    long *arr_B = (long*)malloc(sizeof(long) * size_B);
-    long *arr_C = (long*)malloc(sizeof(long) * size_AC);
-
-    fill_arr(arr_A, size_AC, -1000, 1000);
-    fill_arr(arr_B, size_B, -1000, 1000);
-    qsort(arr_B, size_B, sizeof(long), compare_longs);
-
-    fill_arr_C(arr_C, arr_A, arr_B, size_AC, size_B);
-
-    free(arr_A);
-    free(arr_B);
-    free(arr_C);
+int compare_longs(const void *a, const void *b){
+    long arg1 = *(const long *)a;
+    long arg2 = *(const long *)b;
+    if (arg1 < arg2) return -1;
+    if (arg1 > arg2) return 1;
+    return 0;
 }

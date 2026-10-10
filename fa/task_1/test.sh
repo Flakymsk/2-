@@ -1,4 +1,4 @@
-gcc ../utils.c func.c main.c -o program -lm
+gcc -fsanitize=address -g ../utils.c func.c main.c -o program -lm
 
 echo "=== ЗАПУСК ТЕСТОВ ==="
 

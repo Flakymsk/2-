@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "func.h"
 #include "../utils.h"
-
-void print_bool(const bool x){
-    printf("%s\n", (x == true ? "true" : "false"));
-}
 
 int main(int argc, char *argv[]){
     char flag;
@@ -24,8 +21,8 @@ int main(int argc, char *argv[]){
         
             return 1;
         }
-        double arr_coeffs[3] = {arr[1], arr[2], arr[3]};
-        check_quad_coeffs(arr_coeffs, 0, arr[0]);
+        
+        solve_all_permutations(arr[0], arr[1], arr[2], arr[3]);
         break;
     }
     case 'm':{
@@ -40,13 +37,13 @@ int main(int argc, char *argv[]){
         long b = arr[1];
 
         if (a % b == 0)
-            printf("yes");
+            printf("yes\n");
         else
-            printf("no");
+            printf("no\n");
 
         break;
     }
-    case 't':
+    case 't':{
         double arr[4];
         if ((msg = parse_args(argc, argv, flag, arr, NULL)) != SUCCESS){
             print_error_message(msg);
@@ -56,9 +53,11 @@ int main(int argc, char *argv[]){
 
         print_bool(check_triangle_sides(arr[0], arr[1], arr[2], arr[3]));
         break;
-
+    }
     default:
         print_error_message(ERR_WRONG_FLAG);
         return 1;
     }
+
+    return 0;
 }
