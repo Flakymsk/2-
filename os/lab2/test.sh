@@ -1,20 +1,3 @@
-gcc bitonic.c -o bitonic -pthread
-
-echo "=== Эксперимент 1 (1 поток) ==="
-./bitonic 1
-echo "=== Эксперимент 2 (4 потока) ==="
-./bitonic 4
-echo "=== Эксперимент 3 (8 потоков) ==="
-./bitonic 8
-echo "=== Эксперимент 4 (9 потоков) ==="
-./bitonic 9
-echo "=== Эксперимент 5 (10 потоков - равно ядрам) ==="
-./bitonic 10
-echo "=== Эксперимент 6 (16 потоков) ==="
-./bitonic 16
-echo "=== Эксперимент 7 (128 потоков) ==="
-./bitonic 128
-echo "=== Эксперимент 8 (1024 потока) ==="
-./bitonic 1024
-
-rm bitonic
+gcc main.c bitonic.c bitonic_parallel.c -o bitonic_test -pthread
+./bitonic_test
+rm bitonic_test
